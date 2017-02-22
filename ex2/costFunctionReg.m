@@ -18,21 +18,21 @@ grad = zeros(size(theta));
 %               derivatives of the cost w.r.t. each parameter in theta
 
 % Set 1st elemet equal to zero forever
-newv = [0; theta(2:length(theta));];
+%newv = [0; theta(2:length(theta));];
 
-J = ((1/m) * sum(-1 * y.*log(sigmoid(X * theta)) - (1-y).*log(1-sigmoid(X * theta)))) + ((lambda/(2*m)) * (newv' * newv));
-
-
-grad = ((1/m) * (X' * sigmoid(X * theta))) .+ ((lambda/m) * newv) ;
+%J = ((1/m) * sum(-1 * y.*log(sigmoid(X * theta)) - (1-y).*log(1-sigmoid(X * theta)))) + ((lambda/(2*m)) * (newv' * newv));
 
 
-%[J, grad] = costFunction(theta, X, y);
+%grad = ((1/m) * (X' * sigmoid(X * theta))) .+ ((lambda/m) * newv) ;
+
+
+[J, grad] = costFunction(theta, X, y);
 
 % this effectively ignores "theta zero" in the following calculations
-%theta_zeroed_first = [0; theta(2:length(theta));];
+theta_zeroed_first = [0; theta(2:length(theta));];
 
-%J = J + lambda / (2 * m) * sum( theta_zeroed_first .^ 2 );
-%grad = grad .+ (lambda / m) * theta_zeroed_first;
+J = J + lambda / (2 * m) * ( theta_zeroed_first' * theta_zeroed_first );
+grad = grad .+ (lambda / m) * theta_zeroed_first;
 
 
 
