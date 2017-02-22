@@ -12,6 +12,8 @@ function plotDecisionBoundary(theta, X, y)
 plotData(X(:,2:3), y);
 hold on
 
+%size(X) return the dimension of X; if X is matrix, then size(X) is a 1 * 2 matrix, 1st column is # of rows, 2nd column is # of columns
+% if X has less than 3 columns
 if size(X, 2) <= 3
     % Only need 2 points to define a line, so choose two endpoints
     plot_x = [min(X(:,2))-2,  max(X(:,2))+2];
