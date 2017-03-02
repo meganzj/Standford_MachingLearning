@@ -38,11 +38,11 @@ Theta2_grad = zeros(size(Theta2));
 %         variable J. After implementing Part 1, you can verify that your
 %         cost function computation is correct by verifying the cost
 %         computed in ex4.m
-
-a1 = [ones(m,1) X];
-a2 = sigmoid(a1 * Theta1');
-a2 = [ones(m,1) a2];
-a3 = sigmoid(a2 * Theta2');
+a1 = X;
+z1 = [ones(m,1) X];
+a2 = sigmoid(z1 * Theta1');
+z2 = [ones(m,1) a2];
+a3 = sigmoid(z2 * Theta2');
 y1 = zeros(m,size(Theta2));
 
 for i = 1:m;
@@ -73,15 +73,21 @@ J = 1/m * sum(sum(temp));
 %               over the training examples if you are implementing it for the 
 %               first time.
 
-delta3 = a3 - y1;
-delta2 = zeros(m , hidden_layer_size + 1); 
-delta2 = delta2 + delta3 * a2';
+d3 = a3 - y1; %5000*10
+d2 = d3 * Theta2(:,2:end) .* a2 .* (1 - a2); %5000*25
 
-theta2_zero = [zeros(size(theta2,1)),theta2(:,2:size(thera2,2))];
-theta1_zero = [zeros(size(theta1,1)),theta1(:,2:size(thera1,2))];
+delta2 = zeros(num_labels,hidden_layer_size + 1);
+delta2 = delta2 + d3' * z2;  %10 * 26
 
-Theta2_grad  = (1/m) * (delta3 + lamda * theta2_zero);
-Theta1_grad  = (1/m) * (delta2 + lamda * theta1_zero); 
+delta1 = zeros(hidden_layer_size, input_layer_size + 1);
+delta1 = delta1 + d2' * z1;  %25 * 401 
+
+%Theta1 = [1 Theta1];
+theta2_zero = [zeros(size(Theta2,1),1),Theta2(:,2:size(Theta2,2))];
+theta1_zero = [zeros(size(Theta1,1),1),Theta1(:,2:size(Theta1,2))];
+
+Theta2_grad  = (1/m) * (delta2 + lambda * theta2_zero);
+Theta1_grad  = (1/m) * (delta1 + lambda * theta1_zero); 
 
 %
 % Part 3: Implement regularization with the cost function and gradients.
@@ -96,7 +102,7 @@ Theta1_grad  = (1/m) * (delta2 + lamda * theta1_zero);
 
 
 temp2 = sum(sum(theta1_zero .* theta1_zero))+ sum(sum(theta2_zero .* theta2_zero));
-J = (1/m)* sum(sum(temp)) + 0.5 * (lamda/m) * temp2;
+J = (1/m)* sum(sum(temp)) + 0.5 * (lambda/m) * temp2;
 
 
 
